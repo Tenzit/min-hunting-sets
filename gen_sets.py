@@ -37,7 +37,6 @@ def main():
         piece_map = list()
 
         for idx, v in enumerate(values[:-1]):
-            print(v['values'])
             d = dict()
             for hint_val in v['values']:
                 val = int(hint_val[1], 0)
