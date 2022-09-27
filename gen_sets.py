@@ -114,7 +114,8 @@ def main():
             bucket_queue = next_bucket_queue
 
         print(f'Use these {len(cover_ids)} sets to practice:')
-        print(f'{cover_ids}')
+        for set_id in cover_ids:
+            print(set_id)
 
     except HttpError as err:
         print(err)
