@@ -99,7 +99,6 @@ def main():
         # As this will eventually become pieces_1024
         # If we let it continue
         while(len(pieces_1024 - cover_1024) != 0):
-            print(f'Difference: {len(pieces_1024 - cover_1024)}')
             for bucket in bucket_queue:
                 if bucket:
                     cover_1024.update(bucket[0])
