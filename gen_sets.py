@@ -23,11 +23,34 @@ def main():
     try:
         service = build('sheets', 'v4', developerKey=GOOGLE_API_KEY)
         sheet = service.spreadsheets()
-        sheet_ranges = ['P1!A2:A', 'P2!A2:A', 'P3!A2:A', 'Enemy!A2:A']
+
+
+        # Get the pieces, find the universe and create mapping
+        # So we can get the 1024 without overlapping hint names
+        sheet_ranges = ['P1!A2:B', 'P2!A2:B', 'P3!A2:B', 'Enemy!A2:B']
         result = sheet.values().batchGet(
-            spreadsheetId=sheet_ids['egg quarters'], ranges=sheet_ranges).execute()
+            spreadsheetId=sheet_ids['mad space'],
+            ranges=sheet_ranges).execute()
         values = result.get('valueRanges', [])
-        print(values)
+
+        piece_ids = set()
+        piece_map = list()
+
+        for idx, v in enumerate(values[:-1]):
+            print(v['values'])
+            d = dict()
+            for hint_val in v['values']:
+                val = int(hint_val[1], 0)
+                d[hint_val[0]] = val
+                piece_ids.add(val)
+            piece_map.append(d)
+
+        for hint_val in values[-1]['values']:
+            val = int(hint_val[1], 0)
+            piece_ids.add(val)
+            piece_map[0][hint_val[0]] = val
+            piece_map[1][hint_val[1]] = val
+
     except HttpError as err:
         print(err)
 
