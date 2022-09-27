@@ -49,7 +49,34 @@ def main():
             val = int(hint_val[1], 0)
             piece_ids.add(val)
             piece_map[0][hint_val[0]] = val
-            piece_map[1][hint_val[1]] = val
+            piece_map[1][hint_val[0]] = val
+
+
+        # 1024 processing
+        dict_1024 = dict()
+        inv_dict_1024 = dict()
+
+        sheet_range = '1024!A2:D'
+        result = sheet.values().get(
+            spreadsheetId=sheet_ids['mad space'],
+            range=sheet_range).execute()
+
+        unf_1024 = result.get('values', [])
+
+        # In case there are some pieces not in 1024
+        pieces_1024 = set()
+
+        for combo in unf_1024:
+            combo_pieces = {
+                piece_map[0][combo[1]],
+                piece_map[1][combo[2]],
+                piece_map[2][combo[3]]}
+            dict_1024[int(combo[0])] = combo_pieces
+            inv_dict_1024[tuple(combo_pieces)] = int(combo[0])
+
+            pieces_1024.update(combo_pieces)
+
+        diff = piece_ids.difference(pieces_1024)
 
     except HttpError as err:
         print(err)
