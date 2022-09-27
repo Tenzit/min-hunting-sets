@@ -78,6 +78,36 @@ def main():
 
         diff = piece_ids.difference(pieces_1024)
 
+        # Set cover
+        # Yay NP problems, we bitcoin now
+        # Greedy algo so not guaranteed minimum
+
+        cover_1024 = set()
+        cover_ids = []
+
+        bucket_queue = [list(dict_1024.values()),[],[]]
+
+        # We know that this will always exit
+        # As this will eventually become pieces_1024
+        # If we let it continue
+        while(len(pieces_1024 - cover_1024) != 0):
+            print(f'Difference: {len(pieces_1024 - cover_1024)}')
+            for bucket in bucket_queue:
+                if bucket:
+                    cover_1024.update(bucket[0])
+                    cover_ids.append(inv_dict_1024[tuple(bucket[0])])
+                    break
+            next_bucket_queue = [[], [], []]
+            for bucket in bucket_queue:
+                for combo in bucket:
+                    intersect = combo & cover_1024
+                    if len(intersect) < 3:
+                        next_bucket_queue[len(intersect)].append(combo)
+            bucket_queue = next_bucket_queue
+
+        print(f'Use these {len(cover_ids)} sets to practice:')
+        print(f'{cover_ids}')
+
     except HttpError as err:
         print(err)
 
