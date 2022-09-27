@@ -23,7 +23,7 @@ sheet_ids = {
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('stage', choices=stages)
+    parser.add_argument('stage', type=str.lower, choices=stages)
     return parser.parse_args()
 
 def main():
