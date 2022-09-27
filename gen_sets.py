@@ -1,3 +1,5 @@
+import argparse
+
 from key import GOOGLE_API_KEY
 
 from googleapiclient.discovery import build
@@ -19,7 +21,14 @@ sheet_ids = {
     stages[7]: '1NtosoocEfRRxfr35ZONXh-k7KxtAmVszbuLygTkXZBY',
     stages[8]: '1Srs2AA4XyMtimZ4n2SBUQqKAP0jL1VuPb3kkQvkPjeM'}
 
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('stage', choices=stages)
+    return parser.parse_args()
+
 def main():
+    args = parse_args()
+
     try:
         service = build('sheets', 'v4', developerKey=GOOGLE_API_KEY)
         sheet = service.spreadsheets()
@@ -29,7 +38,7 @@ def main():
         # So we can get the 1024 without overlapping hint names
         sheet_ranges = ['P1!A2:B', 'P2!A2:B', 'P3!A2:B', 'Enemy!A2:B']
         result = sheet.values().batchGet(
-            spreadsheetId=sheet_ids['mad space'],
+            spreadsheetId=sheet_ids[args.stage],
             ranges=sheet_ranges).execute()
         values = result.get('valueRanges', [])
 
@@ -57,7 +66,7 @@ def main():
 
         sheet_range = '1024!A2:D'
         result = sheet.values().get(
-            spreadsheetId=sheet_ids['mad space'],
+            spreadsheetId=sheet_ids[args.stage],
             range=sheet_range).execute()
 
         unf_1024 = result.get('values', [])
